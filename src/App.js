@@ -13,6 +13,14 @@ class App extends React.Component {
       toDos: [],
     }
 
+    componentDidMount() {
+      const persistedState = localStorage.getItem('toDos');
+      if (persistedState) {
+        const toDoArray = JSON.parse(persistedState);
+        this.setState({ toDos: toDoArray });
+      }
+    }
+
     changeHandler = (e) => {
       const { value } = e.target;
       this.setState({ currentFormValue: value });
@@ -31,12 +39,14 @@ class App extends React.Component {
       ];
 
       this.setState({ currentFormValue: '', toDos: newTodoArray });
+      localStorage.clear();
+      localStorage.setItem('toDos', JSON.stringify(newTodoArray));
     }
 
     crossOutTaskHandler = (id) => {
       const { toDos } = this.state;
       const toDosCopy = [...toDos];
-      const newToDos = toDosCopy.map((each) => {
+      const newToDoArray = toDosCopy.map((each) => {
         if (each.id === id) {
           const { completed } = each;
           return {
@@ -46,14 +56,18 @@ class App extends React.Component {
         }
         return { ...each };
       });
-      this.setState({ toDos: newToDos });
+      this.setState({ toDos: newToDoArray });
+      localStorage.clear();
+      localStorage.setItem('toDos', JSON.stringify(newToDoArray));
     }
 
     removeCompletedHandler = () => {
       const { toDos } = this.state;
       const toDosCopy = [...toDos];
-      const newToDos = toDosCopy.filter(each => !each.completed);
-      this.setState({ toDos: newToDos });
+      const newToDoArray = toDosCopy.filter(each => !each.completed);
+      this.setState({ toDos: newToDoArray });
+      localStorage.clear();
+      localStorage.setItem('toDos', JSON.stringify(newToDoArray));
     }
 
     render() {
