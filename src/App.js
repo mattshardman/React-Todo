@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoForm from './components/TodoComponents/TodoForm';
 import ToDo from './components/TodoComponents/Todo';
+import TodoList from './components/TodoComponents/TodoList';
 
 const rand = () => Math.floor(Math.random() * 10000000000);
 
@@ -30,7 +31,7 @@ class App extends React.Component {
         ...toDos, todoObj,
       ];
 
-      this.setState({ toDos: newTodoArray });
+      this.setState({ currentFormValue: '', toDos: newTodoArray });
     }
 
     crossOutTaskHandler = (id) => {
@@ -49,22 +50,24 @@ class App extends React.Component {
       this.setState({ toDos: newToDos });
     }
 
+    removeCompletedHandler = () => {
+      const { toDos } = this.state;
+      const toDosCopy = [...toDos];
+      const newToDos = toDosCopy.filter(each => !each.completed);
+      this.setState({ toDos: newToDos });
+    }
+
     render() {
       const { currentFormValue, toDos } = this.state;
-      console.log(this.state);
       return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <h2>Welcome to your Todo App!</h2>
-          { toDos.map(toDo => (
-            <ToDo
-              taskInfo={toDo}
-              crossOutTaskHandler={this.crossOutTaskHandler}
-            />
-          ))}
+          <TodoList toDos={toDos} crossOutTaskHandler={this.crossOutTaskHandler} />
           <TodoForm
             value={currentFormValue}
             changeHandler={this.changeHandler}
             addToDoHandler={this.addToDoHandler}
+            removeCompletedHandler={this.removeCompletedHandler}
           />
         </div>
       );

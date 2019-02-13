@@ -5,10 +5,12 @@ const ToDo = ({ taskInfo, crossOutTaskHandler }) => (
     type="button"
     onClick={() => crossOutTaskHandler(taskInfo.id)}
     style={{
- textDecoration: taskInfo.completed ? 'line-through' : 'none', background: 'none', border: 'none', outline: 'none' 
-}}
+      textDecoration: taskInfo.completed ? 'line-through' : 'none',
+      background: 'none',
+      border: 'none',
+      outline: 'none',
+    }}
   >
-    {console.log(taskInfo.id)}
     {taskInfo.task}
   </button>
 );
