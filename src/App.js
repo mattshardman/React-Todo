@@ -1,9 +1,18 @@
 import React from 'react';
+import uuid from 'uuid';
 import TodoForm from './components/TodoComponents/TodoForm';
 import TodoList from './components/TodoComponents/TodoList';
 import SearchHeading from './components/TodoComponents/SearchHeading';
 
-const rand = () => Math.floor(Math.random() * 10000000000);
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
+    fontFamily: 'Roboto, sans-serif',
+  },
+};
 
 class App extends React.Component {
   // you will need a place to store your state in this component.
@@ -33,7 +42,7 @@ class App extends React.Component {
       this.setState((state) => {
         const todoObj = {
           task: state.currentFormValue,
-          id: rand(),
+          id: uuid(),
           completed: false,
           display: true,
         };
@@ -125,14 +134,7 @@ class App extends React.Component {
     render() {
       const { searchValue, currentFormValue, toDos } = this.state;
       return (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          alignItems: 'center',
-          fontFamily: 'Roboto, sans-serif',
-        }}
-        >
+        <div style={styles.container}>
           <h1 style={{ fontSize: 60, color: '#484848' }}>ToDo</h1>
           <SearchHeading
             value={searchValue}
