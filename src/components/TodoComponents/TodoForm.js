@@ -1,64 +1,70 @@
 import React from 'react';
+import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 
-const styles = {
+const styles = StyleSheet.create({
   form: {
-    width: 600,
-    maxWidth: '100%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     marginTop: 20,
   },
   input: {
     padding: '0 20px',
+    fontSize: 14,
     height: 45,
     outline: 'none',
-    border: 'none',
-    borderRadius: 2,
-    boxShadow: '0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08)',
+    borderRadius: 8,
+    border: '1px #ddd solid',
   },
   buttonSection: {
     width: '100%',
     height: 80,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   button: {
     height: 40,
     width: 150,
-    background: '#eaeaea',
-    border: 'none',
+    background: 'linear-gradient(top,#f5f5f5,#f1f1f1)',
+    color: '#757575',
+    border: '#f5f5f5 solid 1px',
     borderRadius: 2,
     fontSize: 12,
     fontWeight: 700,
     outline: 'none',
     cursor: 'pointer',
+    transition: 'color 400ms, border 400ms',
+    ':hover': {
+      color: '#000',
+      border: '1px solid #c6c6c6',
+    },
   },
-};
+});
 
 function ToDoForm({
   value, changeHandler, addToDoHandler, removeCompletedHandler,
 }) {
   return (
-    <form onSubmit={addToDoHandler} style={styles.form}>
+    <form onSubmit={addToDoHandler} className={css(styles.form)}>
       <input
         type="text"
-        placeholder="Add a new todo"
-        style={styles.input}
+        placeholder="Add a new todo..."
+        className={css(styles.input)}
         value={value}
         onChange={e => changeHandler(e, 'currentFormValue')}
       />
-      <div style={styles.buttonSection}>
+      <div className={css(styles.buttonSection)}>
         <button
           type="submit"
-          style={styles.button}
+          className={css(styles.button)}
         >
           Add ToDo
         </button>
         <button
           type="button"
-          style={styles.button}
+          className={css(styles.button)}
           onClick={removeCompletedHandler}
         >
           Remove completed

@@ -3,14 +3,38 @@ import uuid from 'uuid';
 import TodoForm from './components/TodoComponents/TodoForm';
 import TodoList from './components/TodoComponents/TodoList';
 import SearchHeading from './components/TodoComponents/SearchHeading';
+import Header from './components/TodoComponents/Header';
+import Popular from './components/TodoComponents/Popular';
 
 const styles = {
+  header: {
+    boxSizing: 'border-box',
+    width: '100%',
+    margin: '0 5%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    width: 600,
+    maxWidth: '100%',
+    margin: '0 auto',
     alignItems: 'center',
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: 'Open Sans, sans-serif',
+  },
+  card: {
+    boxSizing: 'border-box',
+    width: '95%',
+    border: '1px #ddd solid',
+    borderRadius: 8,
+    margin: '0 5%',
+
+    overFlow: 'hidden',
+  },
+  form: {
+    boxSizing: 'border-box',
+    width: '95%',
+    margin: '0 5%',
+
   },
 };
 
@@ -37,14 +61,15 @@ class App extends React.Component {
       this.setState({ [name]: value });
     }
 
-    addToDoHandler = (e) => {
+    addToDoHandler = (e, input) => {
       e.preventDefault();
       this.setState((state) => {
         const todoObj = {
-          task: state.currentFormValue,
+          task: input || state.currentFormValue,
           id: uuid(),
           completed: false,
           display: true,
+          timeAdded: new Date().toLocaleString(),
         };
 
         const newTodoArray = [
@@ -135,23 +160,36 @@ class App extends React.Component {
       const { searchValue, currentFormValue, toDos } = this.state;
       return (
         <div style={styles.container}>
-          <h1 style={{ fontSize: 60, color: '#484848' }}>ToDo</h1>
-          <SearchHeading
-            value={searchValue}
-            changeHandler={this.changeHandler}
-            clearSearch={this.clearSearch}
-            searchHandler={this.searchHandler}
-          />
-          <TodoList
-            toDos={toDos}
-            crossOutTaskHandler={this.crossOutTaskHandler}
-          />
-          <TodoForm
-            value={currentFormValue}
-            changeHandler={this.changeHandler}
-            addToDoHandler={this.addToDoHandler}
-            removeCompletedHandler={this.removeCompletedHandler}
-          />
+          <div style={styles.header}>
+            <Header
+              value={searchValue}
+              changeHandler={this.changeHandler}
+              clearSearch={this.clearSearch}
+              searchHandler={this.searchHandler}
+            />
+          </div>
+          <div style={{ height: 60 }} />
+          <Popular addToDo={this.addToDoHandler} />
+          <div style={styles.card}>
+            <SearchHeading
+              value={searchValue}
+              changeHandler={this.changeHandler}
+              clearSearch={this.clearSearch}
+              searchHandler={this.searchHandler}
+            />
+            <TodoList
+              toDos={toDos}
+              crossOutTaskHandler={this.crossOutTaskHandler}
+            />
+          </div>
+          <div style={styles.form}>
+            <TodoForm
+              value={currentFormValue}
+              changeHandler={this.changeHandler}
+              addToDoHandler={this.addToDoHandler}
+              removeCompletedHandler={this.removeCompletedHandler}
+            />
+          </div>
         </div>
       );
     }

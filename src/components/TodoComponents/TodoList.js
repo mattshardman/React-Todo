@@ -10,9 +10,7 @@ function TodoList({ toDos, crossOutTaskHandler }) {
       alignItems: 'flex-start',
       flexDirection: 'column',
       textAlign: 'left',
-      width: 600,
-      maxWidth: '100%',
-      maxHeight: '100vh',
+      width: '100%',
     }}
     >
       { toDos.map(toDo => (
