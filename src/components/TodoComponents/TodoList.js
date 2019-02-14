@@ -1,6 +1,5 @@
-// your components will all go in this `component` directory.
-// feel free to change this component.js into TodoList.js
 import React from 'react';
+import PropTypes from 'prop-types';
 import ToDo from './Todo';
 
 function TodoList({ toDos, crossOutTaskHandler }) {
@@ -11,7 +10,9 @@ function TodoList({ toDos, crossOutTaskHandler }) {
       alignItems: 'flex-start',
       flexDirection: 'column',
       textAlign: 'left',
-      width: '40%',
+      width: 600,
+      maxWidth: '100%',
+      maxHeight: '100vh',
     }}
     >
       { toDos.map(toDo => (
@@ -23,5 +24,10 @@ function TodoList({ toDos, crossOutTaskHandler }) {
     </div>
   );
 }
+
+TodoList.propTypes = {
+  toDos: PropTypes.array.isRequired, //eslint-disable-line
+  crossOutTaskHandler: PropTypes.func.isRequired,
+};
 
 export default TodoList;

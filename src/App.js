@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoForm from './components/TodoComponents/TodoForm';
 import TodoList from './components/TodoComponents/TodoList';
+import SearchHeading from './components/TodoComponents/SearchHeading';
 
 const rand = () => Math.floor(Math.random() * 10000000000);
 
@@ -10,6 +11,7 @@ class App extends React.Component {
   // this component is going to take care of state, and any change handlers you need to work with your state
     state = {
       currentFormValue: '',
+      searchValue: '',
       toDos: [],
     }
 
@@ -21,67 +23,127 @@ class App extends React.Component {
       }
     }
 
-    changeHandler = (e) => {
+    changeHandler = (e, name) => {
       const { value } = e.target;
-      this.setState({ currentFormValue: value });
+      this.setState({ [name]: value });
     }
 
     addToDoHandler = (e) => {
       e.preventDefault();
-      const { currentFormValue, toDos } = this.state;
-      const todoObj = {
-        task: currentFormValue,
-        id: rand(),
-        completed: false,
-      };
-      const newTodoArray = [
-        ...toDos, todoObj,
-      ];
+      this.setState((state) => {
+        const todoObj = {
+          task: state.currentFormValue,
+          id: rand(),
+          completed: false,
+          display: true,
+        };
 
-      this.setState({ currentFormValue: '', toDos: newTodoArray });
-      localStorage.clear();
-      localStorage.setItem('toDos', JSON.stringify(newTodoArray));
+        const newTodoArray = [
+          ...state.toDos, todoObj,
+        ];
+
+        localStorage.clear();
+        localStorage.setItem('toDos', JSON.stringify(newTodoArray));
+
+        return {
+          currentFormValue: '',
+          toDos: [...state.toDos, todoObj],
+        };
+      });
     }
 
     crossOutTaskHandler = (id) => {
-      const { toDos } = this.state;
-      const toDosCopy = [...toDos];
-      const newToDoArray = toDosCopy.map((each) => {
-        if (each.id === id) {
-          const { completed } = each;
-          return {
-            ...each,
-            completed: !completed,
-          };
-        }
-        return { ...each };
+      this.setState((state) => {
+        const newToDoArray = state.toDos.map((each) => {
+          if (each.id === id) {
+            const { completed } = each;
+            return {
+              ...each,
+              completed: !completed,
+            };
+          }
+          return { ...each };
+        });
+
+        localStorage.clear();
+        localStorage.setItem('toDos', JSON.stringify(newToDoArray));
+
+        return { toDos: newToDoArray };
       });
-      this.setState({ toDos: newToDoArray });
-      localStorage.clear();
-      localStorage.setItem('toDos', JSON.stringify(newToDoArray));
     }
 
     removeCompletedHandler = () => {
-      const { toDos } = this.state;
-      const toDosCopy = [...toDos];
-      const newToDoArray = toDosCopy.filter(each => !each.completed);
-      this.setState({ toDos: newToDoArray });
-      localStorage.clear();
-      localStorage.setItem('toDos', JSON.stringify(newToDoArray));
+      this.setState((state) => {
+        const newToDoArray = state.toDos.filter(each => !each.completed);
+        localStorage.clear();
+        localStorage.setItem('toDos', JSON.stringify(newToDoArray));
+        return { toDos: newToDoArray };
+      });
+    }
+
+    searchHandler = (e) => {
+      e.preventDefault();
+
+      this.setState((state) => {
+        const newToDoArray = state.toDos.map((each) => {
+          const searchValue = state.searchValue.toLowerCase();
+          const task = each.task.toLowerCase();
+          const doesItemMatchSearchTerm = task.includes(searchValue);
+          if (!doesItemMatchSearchTerm) {
+            return {
+              ...each,
+              display: false,
+            };
+          }
+
+          return { ...each };
+        });
+
+        localStorage.clear();
+        localStorage.setItem('toDos', JSON.stringify(newToDoArray));
+
+        return { toDos: newToDoArray };
+      });
+    }
+
+    clearSearch = () => {
+      this.setState((state) => {
+        const newToDoArray = state.toDos.map(each => ({
+          ...each,
+          display: true,
+        }));
+
+        localStorage.clear();
+        localStorage.setItem('toDos', JSON.stringify(newToDoArray));
+        return {
+          searchValue: '',
+          toDos: newToDoArray,
+        };
+      });
     }
 
     render() {
-      const { currentFormValue, toDos } = this.state;
+      const { searchValue, currentFormValue, toDos } = this.state;
       return (
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           width: '100%',
           alignItems: 'center',
+          fontFamily: 'Roboto, sans-serif',
         }}
         >
-          <h1>ToDo</h1>
-          <TodoList toDos={toDos} crossOutTaskHandler={this.crossOutTaskHandler} />
+          <h1 style={{ fontSize: 60, color: '#484848' }}>ToDo</h1>
+          <SearchHeading
+            value={searchValue}
+            changeHandler={this.changeHandler}
+            clearSearch={this.clearSearch}
+            searchHandler={this.searchHandler}
+          />
+          <TodoList
+            toDos={toDos}
+            crossOutTaskHandler={this.crossOutTaskHandler}
+          />
           <TodoForm
             value={currentFormValue}
             changeHandler={this.changeHandler}

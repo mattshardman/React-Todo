@@ -6,7 +6,6 @@ const styles = {
     background: 'none',
     border: 'none',
     outline: 'none',
-    width: '100%',
     height: 50,
     fontSize: 16,
     display: 'flex',
@@ -29,7 +28,7 @@ const ToDo = ({ taskInfo, crossOutTaskHandler }) => (
   <button
     type="button"
     onClick={() => crossOutTaskHandler(taskInfo.id)}
-    style={styles.toDo}
+    style={{ ...styles.toDo, display: taskInfo.display ? 'flex' : 'none' }}
   >
     <div style={styles.item}>
       { taskInfo.completed && (

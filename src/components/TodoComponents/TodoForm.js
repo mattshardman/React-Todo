@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
   form: {
-    width: '40%',
+    width: 600,
+    maxWidth: '100%',
     display: 'flex',
     flexDirection: 'column',
     marginTop: 20,
@@ -45,24 +47,32 @@ function ToDoForm({
         placeholder="Add a new todo"
         style={styles.input}
         value={value}
-        onChange={changeHandler}
+        onChange={e => changeHandler(e, 'currentFormValue')}
       />
       <div style={styles.buttonSection}>
         <button
           type="submit"
           style={styles.button}
-        >Add ToDo
+        >
+          Add ToDo
         </button>
         <button
           type="button"
           style={styles.button}
           onClick={removeCompletedHandler}
         >
-        Remove completed
+          Remove completed
         </button>
       </div>
     </form>
   );
 }
+
+ToDoForm.propTypes = {
+  value: PropTypes.string.isRequired,
+  changeHandler: PropTypes.func.isRequired,
+  addToDoHandler: PropTypes.func.isRequired,
+  removeCompletedHandler: PropTypes.func.isRequired,
+};
 
 export default ToDoForm;
